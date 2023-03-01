@@ -21,7 +21,7 @@ namespace WeatherApp.Controllers
         [HttpGet("/weatherforecast/{location}")]
         public async Task<WeatherForecast> GetWeatherLive(string location)
         {
-            return await _weatherApi.GetWeatherLiveFromApi(location);
+            return await _weatherApi.GetLiveWeatherAsync(location);
         }
     }
 }
