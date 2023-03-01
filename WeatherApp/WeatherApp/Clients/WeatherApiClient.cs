@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Web.Http;
 
 namespace WeatherApp.Clients;
 
@@ -36,6 +35,5 @@ public class WeatherApiClient : IWeatherClient
         {
             return new WeatherForecast { Message = "An unexpected error occurred" };
         }
-
     }
 }
