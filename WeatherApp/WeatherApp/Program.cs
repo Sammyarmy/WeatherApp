@@ -10,11 +10,13 @@ namespace WeatherApp
 
             // Add services to the container.
             builder.Services.AddControllers();
+
             builder.Services.AddSingleton<IWeatherClient, WeatherApiClient>();
             builder.Services.AddHttpClient<IWeatherClient, WeatherApiClient>(client =>
             {
                 client.BaseAddress = new Uri("http://api.weatherapi.com/v1/");
             });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

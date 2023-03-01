@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System.Net.Http.Json;
-using WeatherApp;
+﻿using System.Net;
+using System.Web.Http;
 
 namespace WeatherApp.Clients;
 
@@ -23,6 +21,21 @@ public class WeatherApiClient : IWeatherClient
 
     public async Task<WeatherForecast?> GetWeatherLiveFromApi(string location)
     {
-        return await _httpClient.GetFromJsonAsync<WeatherForecast>($"current.json?key={WeatherApiKey}&q={location}&aqi=no");
+        var response = await _httpClient.GetAsync($"current.json?key={WeatherApiKey}&q={location}&aqi=no");
+        if (response.IsSuccessStatusCode)
+        {
+            var forecast = await response.Content.ReadFromJsonAsync<WeatherForecast>();
+            forecast.Message = $"Latest weather from {location}.";
+            return forecast;
+        }
+        else if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return new WeatherForecast { Message = "Location not found" };
+        }
+        else
+        {
+            return new WeatherForecast { Message = "An unexpected error occurred" };
+        }
+
     }
 }
