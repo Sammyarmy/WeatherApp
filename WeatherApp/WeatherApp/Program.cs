@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Memory;
 using WeatherApp.Clients;
 
 namespace WeatherApp
@@ -10,15 +11,19 @@ namespace WeatherApp
 
             // Add services to the container.
             builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddMemoryCache();
 
-            builder.Services.AddSingleton<IWeatherClient, WeatherApiClient>();
-            builder.Services.AddHttpClient<IWeatherClient, WeatherApiClient>(client =>
+
+
+            builder.Services.AddHttpClient<WeatherApiClient>(client =>
             {
                 client.BaseAddress = new Uri("http://api.weatherapi.com/v1/");
             });
+            
+            builder.Services.AddSingleton<IWeatherClient>(x => new CachedWeatherApiClient(x.GetRequiredService<WeatherApiClient>(), x.GetRequiredService<IMemoryCache>()));
 
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
 
 
             var app = builder.Build();

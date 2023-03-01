@@ -4,7 +4,7 @@ namespace WeatherApp.Clients;
 
 public interface IWeatherClient
 {
-    Task<WeatherForecast> GetWeatherLiveFromApi(string location);
+    Task<WeatherForecast> GetLiveWeatherAsync(string location);
 }
 
 public class WeatherApiClient : IWeatherClient
@@ -18,7 +18,7 @@ public class WeatherApiClient : IWeatherClient
         _httpClient = httpClient;
     }
 
-    public async Task<WeatherForecast?> GetWeatherLiveFromApi(string location)
+    public async Task<WeatherForecast?> GetLiveWeatherAsync(string location)
     {
         var response = await _httpClient.GetAsync($"current.json?key={WeatherApiKey}&q={location}&aqi=no");
         if (response.IsSuccessStatusCode)
