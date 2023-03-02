@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WeatherApp.Clients;
+using WeatherApp.Models;
 
 namespace WeatherApp.Controllers
 {
@@ -19,9 +20,14 @@ namespace WeatherApp.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpGet("/weatherforecast/{location}")]
-        public async Task<WeatherForecast> GetWeatherLive(string location)
+        public async Task<ActionResult<WeatherForecast>> GetWeatherLive(string location)
         {
-            return await _weatherApi.GetLiveWeatherAsync(location);
+            var result = await _weatherApi.GetLiveWeatherAsync(location);
+            if (result.Message == "Location not found")
+            {
+                return NotFound("Location not found");
+            }
+            return result;
         }
     }
 }

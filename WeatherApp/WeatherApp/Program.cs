@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using WeatherApp.Clients;
+using WeatherApp.Commands;
 
 namespace WeatherApp
 {
@@ -24,6 +25,7 @@ namespace WeatherApp
             
             builder.Services.AddSingleton<IWeatherClient>(x => new CachedWeatherApiClient(x.GetRequiredService<WeatherApiClient>(), x.GetRequiredService<IMemoryCache>()));
 
+            builder.Services.AddSingleton<IDatabase, SqlDatabase>();
 
 
             var app = builder.Build();

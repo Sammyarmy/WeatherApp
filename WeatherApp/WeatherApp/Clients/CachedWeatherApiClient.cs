@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using WeatherApp.Models;
 
 namespace WeatherApp.Clients
 {

@@ -2,11 +2,6 @@
 
 namespace WeatherApp.Clients;
 
-public interface IWeatherClient
-{
-    Task<WeatherForecast> GetLiveWeatherAsync(string location);
-}
-
 public class WeatherApiClient : IWeatherClient
 {
     private readonly HttpClient _httpClient;
