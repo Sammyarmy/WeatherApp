@@ -4,7 +4,7 @@
     {
         int AddFavourite(string location);
         string GetFavourite(int id);
-        void UpdateFavourite(int id, string location);
-        void DeleteFavourite(int id);        
+        bool UpdateFavourite(int id, string location);
+        bool DeleteFavourite(int id);        
     }
 }

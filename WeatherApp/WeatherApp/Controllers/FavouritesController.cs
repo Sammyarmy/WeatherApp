@@ -44,9 +44,17 @@ namespace WeatherApp.Controllers
                 return NotFound();
             }
             return await _weatherClient.GetLiveWeatherAsync(location);
+        }
+        [EnableCors("AllowSpecificOrigin")]
+        [HttpDelete("/weatherforecast/favourites/{id}")]
+        public async Task<ActionResult<string>> DeleteFavouriteWeather(int id)
+        {
             
-            
-            
+            if (_database.DeleteFavourite(id))
+            {
+                return NotFound();
+            }
+            return "Deleted";
         }
     }
 }

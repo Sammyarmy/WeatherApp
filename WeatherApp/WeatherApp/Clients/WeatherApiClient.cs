@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Web.Http;
+using WeatherApp.Exceptions;
 using WeatherApp.Models;
 
 namespace WeatherApp.Clients;
@@ -26,11 +26,11 @@ public class WeatherApiClient : IWeatherClient
         }
         else if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.NotFound)
         {
-            throw new HttpResponseException(HttpStatusCode.NotFound);
+            throw new NotFoundException("Weather information not found for the specified location.");
         }
         else
         {
-            throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            throw new InternalServerErrorException("Something broke");
         }
     }
 }

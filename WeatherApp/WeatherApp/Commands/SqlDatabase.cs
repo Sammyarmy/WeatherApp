@@ -6,9 +6,17 @@ namespace WeatherApp.Commands
     {
         private readonly string connectionString = "Server=localhost;Database=WeatherApp;User Id=BeagleStreet;Password=Password;";
 
-        public void DeleteFavourite(int id)
+        public bool DeleteFavourite(int id)
         {
-            throw new NotImplementedException();
+            string deleteQuery = "DELETE FROM Favourites WHERE id = (@Id)";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(deleteQuery, connection);
+                command.Parameters.AddWithValue("@Id", id);
+                connection.Open();
+                var result = command.ExecuteScalar();
+                return result != null;
+            }
         }
 
         public string GetFavourite(int id)
@@ -37,7 +45,7 @@ namespace WeatherApp.Commands
             }
         }
 
-        public void UpdateFavourite(int id, string location)
+        public bool UpdateFavourite(int id, string location)
         {
             throw new NotImplementedException();
         }
