@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Web.Http;
 using WeatherApp.Clients;
 using WeatherApp.Controllers;
 using WeatherApp.Models;
@@ -49,14 +51,11 @@ namespace WeatherApp.Tests
 
         private class FakeWeatherClient : IWeatherClient
         {
-            public async Task<WeatherForecast> GetLiveWeatherAsync(string _location)
+            public async Task<ActionResult<WeatherForecast>> GetLiveWeatherAsync(string _location)
             {
                 if (_location == "InvalidLocation")
                 {
-                    return new WeatherForecast
-                    {
-                        Message = "Location not found"
-                    };                    
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
 
                 return new WeatherForecast

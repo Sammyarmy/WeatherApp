@@ -1,8 +1,9 @@
-﻿using WeatherApp.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using WeatherApp.Models;
 
 namespace WeatherApp.Clients;
 
 public interface IWeatherClient
 {
-    Task<WeatherForecast> GetLiveWeatherAsync(string location);
+    Task<ActionResult<WeatherForecast>> GetLiveWeatherAsync(string location);
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using WeatherApp.Models;
 
 namespace WeatherApp.Clients
@@ -14,7 +15,7 @@ namespace WeatherApp.Clients
             _memoryCache = memoryCache;
         }
 
-        public async Task<WeatherForecast> GetLiveWeatherAsync(string location)
+        public async Task<ActionResult<WeatherForecast>> GetLiveWeatherAsync(string location)
         {
             return await _memoryCache.GetOrCreateAsync(location,
                 async entry =>

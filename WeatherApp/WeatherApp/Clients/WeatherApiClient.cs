@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Web.Http;
+using WeatherApp.Models;
 
 namespace WeatherApp.Clients;
 
@@ -13,22 +16,21 @@ public class WeatherApiClient : IWeatherClient
         _httpClient = httpClient;
     }
 
-    public async Task<WeatherForecast?> GetLiveWeatherAsync(string location)
+    public async Task<ActionResult<WeatherForecast>> GetLiveWeatherAsync(string location)
     {
         var response = await _httpClient.GetAsync($"current.json?key={WeatherApiKey}&q={location}&aqi=no");
         if (response.IsSuccessStatusCode)
         {
             var forecast = await response.Content.ReadFromJsonAsync<WeatherForecast>();
-            forecast.Message = $"Latest weather from {location}.";
             return forecast;
         }
         else if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.NotFound)
         {
-            return new WeatherForecast { Message = "Location not found" };
+            throw new HttpResponseException(HttpStatusCode.NotFound);
         }
         else
         {
-            return new WeatherForecast { Message = "An unexpected error occurred" };
+            throw new HttpResponseException(HttpStatusCode.InternalServerError);
         }
     }
 }

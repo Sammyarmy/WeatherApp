@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http;
 using WeatherApp.Clients;
 using WeatherApp.Models;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 namespace WeatherApp.Controllers
 {
@@ -22,12 +24,15 @@ namespace WeatherApp.Controllers
         [HttpGet("/weatherforecast/{location}")]
         public async Task<ActionResult<WeatherForecast>> GetWeatherLive(string location)
         {
-            var result = await _weatherApi.GetLiveWeatherAsync(location);
-            if (result.Message == "Location not found")
+            try
             {
-                return NotFound("Location not found");
+                var result = await _weatherApi.GetLiveWeatherAsync(location);
+                return result;
             }
-            return result;
+            catch (HttpResponseException ex)
+            {
+                return NotFound($"Location '{location}' not found.");
+            }
         }
     }
 }
