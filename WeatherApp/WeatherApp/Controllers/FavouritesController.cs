@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WeatherApp.Clients;
 using WeatherApp.Commands;
 using WeatherApp.Models;
+using WeatherApp.Models.Responses;
 
 namespace WeatherApp.Controllers
 {
@@ -23,13 +24,13 @@ namespace WeatherApp.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpPost("/weatherforecast/favourites/{location}")]
-        public IActionResult AddFavourite(string location)
+        public async Task<IActionResult> AddFavourite(string location)
         {
-            var favouriteId = _database.AddFavourite(location);
-            var response = new
+            var favouriteId = await _database.AddFavourite(location);
+            var response = new AddFavouriteResponse
             {
-                message = "Your favourite has been added.",
-                id = favouriteId
+                Message = "Your favourite has been added.",
+                Id = favouriteId
             };
             return Ok(response);
         }
@@ -38,7 +39,7 @@ namespace WeatherApp.Controllers
         [HttpGet("/weatherforecast/favourites/{id}")]
         public async Task<ActionResult<WeatherForecast>> GetFavouriteWeather(int id)
         {
-            var location = _database.GetFavourite(id); 
+            var location = await _database.GetFavourite(id); 
             if(string.IsNullOrWhiteSpace(location))
             {
                 return NotFound();
@@ -48,14 +49,17 @@ namespace WeatherApp.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpDelete("/weatherforecast/favourites/{id}")]
-        public async Task<ActionResult<string>> DeleteFavouriteWeather(int id)
+        public async Task<IActionResult> DeleteFavouriteWeather(int id)
         {
-            
-            if (!_database.DeleteFavourite(id))
+            var isDeleted = await _database.DeleteFavourite(id);
+
+            if (!isDeleted)
             {
                 return NotFound();
             }
-            return "Deleted";
+
+            var response = new DeleteFavouriteResponse { IsDeleted = isDeleted, Message = $"{id} has been deleted"};
+            return Ok(response);
         }
     }
 }

@@ -2,9 +2,9 @@
 {
     public interface IDatabase
     {
-        int AddFavourite(string location);
-        string GetFavourite(int id);
-        bool UpdateFavourite(int id, string location);
-        bool DeleteFavourite(int id);        
+        Task<int> AddFavourite(string location);
+        Task<string> GetFavourite(int id);
+        Task<bool> UpdateFavourite(int id, string location);
+        Task<bool> DeleteFavourite(int id);        
     }
 }

@@ -6,7 +6,7 @@ namespace WeatherApp.Commands
     {
         private readonly string connectionString = "Server=localhost;Database=WeatherApp;User Id=BeagleStreet;Password=Password;";
 
-        public bool DeleteFavourite(int id)
+        public async Task<bool> DeleteFavourite(int id)
         {
             string deleteQuery = "DELETE FROM Favourites WHERE id = (@Id)";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -14,13 +14,13 @@ namespace WeatherApp.Commands
                 SqlCommand command = new SqlCommand(deleteQuery, connection);
                 command.Parameters.AddWithValue("@Id", id);
                 connection.Open();
-                int rowsAffected = command.ExecuteNonQuery();
+                int rowsAffected = await command.ExecuteNonQueryAsync();
                 return rowsAffected > 0;
             }
         
         }
 
-        public string GetFavourite(int id)
+        public async Task<string> GetFavourite(int id)
         {
             string getQuery = "SELECT location FROM Favourites WHERE id = (@Id)";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -28,12 +28,12 @@ namespace WeatherApp.Commands
                 SqlCommand command = new SqlCommand(getQuery, connection);
                 command.Parameters.AddWithValue("@Id", id);
                 connection.Open();
-                var result = command.ExecuteScalar();
+                var result = await command.ExecuteScalarAsync();
                 return (result == null) ? "" : result.ToString();
             }
         }
 
-        public int AddFavourite(string location)
+        public async Task<int> AddFavourite(string location)
         {
             string insertQuery = "INSERT INTO Favourites (location) VALUES (@Location); SELECT CAST(scope_identity() AS int)";
 
@@ -42,11 +42,11 @@ namespace WeatherApp.Commands
                 SqlCommand command = new SqlCommand(insertQuery, connection);
                 command.Parameters.AddWithValue("@Location", location);
                 connection.Open();
-                return (int)command.ExecuteScalar();
+                return (int)await command.ExecuteScalarAsync();
             }
         }
 
-        public bool UpdateFavourite(int id, string location)
+        public async Task<bool> UpdateFavourite(int id, string location)
         {
             throw new NotImplementedException();
         }

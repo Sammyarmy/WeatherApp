@@ -16,13 +16,13 @@ namespace WeatherApp.Tests.Commands
         }
 
         [Test]
-        public void AddFavourite_ShouldReturnId()
+        public async Task AddFavourite_ShouldReturnId()
         {
             // Arrange
             string location = "London";
 
             // Act
-            int id = _database.AddFavourite(location);
+            int id = await _database.AddFavourite(location);
 
             // Assert
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -37,27 +37,27 @@ namespace WeatherApp.Tests.Commands
         }
 
         [Test]
-        public void GetFavourite_WithValidId_ShouldReturnLocation()
+        public async Task GetFavourite_WithValidId_ShouldReturnLocation()
         {
             // Arrange
             int id = 1;
             string expectedLocation = "London";
 
             // Act
-            string result = _database.GetFavourite(id);
+            string result = await _database.GetFavourite(id);
 
             // Assert
             Assert.AreEqual(expectedLocation, result);
         }
 
         [Test]
-        public void GetFavourite_WithInvalidId_ShouldReturnEmptyString()
+        public async Task GetFavourite_WithInvalidId_ShouldReturnEmptyString()
         {
             // Arrange
             int id = -1;
 
             // Act
-            string result = _database.GetFavourite(id);
+            string result = await _database.GetFavourite(id);
 
             // Assert
             Assert.AreEqual("", result);

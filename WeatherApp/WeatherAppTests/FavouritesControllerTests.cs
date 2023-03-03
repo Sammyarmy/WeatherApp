@@ -5,6 +5,7 @@ using WeatherApp.Clients;
 using WeatherApp.Commands;
 using WeatherApp.Controllers;
 using WeatherApp.Models;
+using WeatherApp.Models.Responses;
 
 namespace WeatherAppTests
 {
@@ -30,14 +31,22 @@ namespace WeatherAppTests
             // Arrange
             var location = "New York";
             var favouriteId = 1;
-            _databaseMock.Setup(x => x.AddFavourite(location)).Returns(favouriteId);
+            _databaseMock.Setup(x => x.AddFavourite(location)).ReturnsAsync(favouriteId);
 
             // Act
             var result = _controller.AddFavourite(location);
 
+
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.IsInstanceOf<OkObjectResult>(result.Result);
+            var okResult = result.Result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(200, okResult.StatusCode);
+
+            var response = okResult.Value as AddFavouriteResponse;
+            Assert.IsNotNull(response);
+            Assert.AreEqual("Your favourite has been added.", response.Message);
+            Assert.AreEqual(favouriteId, response.Id);
         }
 
         [Test]
@@ -45,7 +54,7 @@ namespace WeatherAppTests
         {
             // Arrange
             var id = 1;
-            _databaseMock.Setup(x => x.GetFavourite(id)).Returns("");
+            _databaseMock.Setup(x => x.GetFavourite(id)).ReturnsAsync("");
 
             // Act
             var result = await _controller.GetFavouriteWeather(id);
@@ -61,7 +70,7 @@ namespace WeatherAppTests
             // Arrange
             var id = 1;
             var location = "New York";
-            _databaseMock.Setup(x => x.GetFavourite(id)).Returns(location);
+            _databaseMock.Setup(x => x.GetFavourite(id)).ReturnsAsync(location);
             var weatherForecast = new WeatherForecast();
             _weatherClientMock.Setup(x => x.GetLiveWeatherAsync(location)).ReturnsAsync(weatherForecast);
 
@@ -71,6 +80,44 @@ namespace WeatherAppTests
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Value, weatherForecast);
+        }
+
+        [Test]
+        public void DeleteFavouriteWeather_Should_Return_Success_With_IsDeleted_True()
+        {
+            // Arrange
+            var id = 1;
+            _databaseMock.Setup(x => x.DeleteFavourite(id)).ReturnsAsync(true);
+
+            // Act
+            var result = _controller.DeleteFavouriteWeather(id);
+
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result.Result);
+            var okResult = result.Result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(200, okResult.StatusCode);
+
+            var response = okResult.Value as DeleteFavouriteResponse;
+            Assert.IsNotNull(response);
+            Assert.AreEqual(true, response.IsDeleted);
+        }
+
+        [Test]
+        public void DeleteFavouriteWeather_Should_Return_NotFound_When_Favourite_Not_Found()
+        {
+            // Arrange
+            var id = 1;
+            _databaseMock.Setup(x => x.DeleteFavourite(id)).ReturnsAsync(false);
+
+            // Act
+            var result = _controller.DeleteFavouriteWeather(id);
+
+            // Assert
+            Assert.IsInstanceOf<NotFoundResult>(result.Result);
+            var notFoundResult = result.Result as NotFoundResult;
+            Assert.IsNotNull(notFoundResult);
+            Assert.AreEqual(404, notFoundResult.StatusCode);
         }
     }
 }
