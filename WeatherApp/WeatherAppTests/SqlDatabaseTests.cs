@@ -1,4 +1,6 @@
 ﻿using System.Data.SqlClient;
+using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using WeatherApp.Commands;
 
@@ -8,11 +10,13 @@ namespace WeatherApp.Tests.Commands
     {
         private IDatabase _database;
         private string _connectionString = "Server=localhost;Database=WeatherApp;User Id=BeagleStreet;Password=Password;";
+        private Mock<ILogger<SqlDatabase>> _loggerMock;
 
         [SetUp]
         public void Setup()
         {
-            _database = new SqlDatabase();
+            _loggerMock = new Mock<ILogger<SqlDatabase>>();
+            _database = new SqlDatabase(_loggerMock.Object);
         }
 
         [Test]

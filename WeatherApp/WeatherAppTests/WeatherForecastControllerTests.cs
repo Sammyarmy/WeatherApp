@@ -5,7 +5,7 @@ using WeatherApp.Clients;
 using WeatherApp.Controllers;
 using WeatherApp.Models;
 
-namespace WeatherApp.Tests
+namespace WeatherApp.Tests.Controllers
 {
     [TestFixture]
     public class WeatherForecastControllerTests

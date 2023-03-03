@@ -61,5 +61,12 @@ namespace WeatherApp.Controllers
             var response = new DeleteFavouriteResponse { IsDeleted = isDeleted, Message = $"{id} has been deleted"};
             return Ok(response);
         }
+
+        [EnableCors("AllowSpecificOrigin")]
+        [HttpPut("/weatherforecast/favourites/{id}/{location}")]
+        public async Task<ActionResult<WeatherForecast>> UpdateFavouriteWeather(int id, string location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

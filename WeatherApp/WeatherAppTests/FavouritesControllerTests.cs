@@ -7,7 +7,7 @@ using WeatherApp.Controllers;
 using WeatherApp.Models;
 using WeatherApp.Models.Responses;
 
-namespace WeatherAppTests
+namespace WeatherApp.Tests.Controllers
 {
     public class FavouritesControllerTests
     {
