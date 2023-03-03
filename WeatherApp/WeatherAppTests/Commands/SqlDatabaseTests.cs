@@ -1,10 +1,9 @@
-﻿using System.Data.SqlClient;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using System.Data.SqlClient;
 using WeatherApp.Commands;
 
-namespace WeatherApp.Tests.Commands
+namespace WeatherAppTests.Commands
 {
     public class SqlDatabaseTests
     {

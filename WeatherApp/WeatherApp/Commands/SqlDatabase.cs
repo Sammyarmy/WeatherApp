@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace WeatherApp.Commands
 {
