@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http;
 using WeatherApp.Clients;
+using WeatherApp.Models;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 namespace WeatherApp.Controllers
 {
@@ -19,9 +22,17 @@ namespace WeatherApp.Controllers
 
         [EnableCors("AllowSpecificOrigin")]
         [HttpGet("/weatherforecast/{location}")]
-        public async Task<WeatherForecast> GetWeatherLive(string location)
+        public async Task<ActionResult<WeatherForecast>> GetWeatherLive(string location)
         {
-            return await _weatherApi.GetLiveWeatherAsync(location);
+            try
+            {
+                var result = await _weatherApi.GetLiveWeatherAsync(location);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                return NotFound($"Location '{location}' not found.");
+            }
         }
     }
 }
