@@ -14,9 +14,10 @@ namespace WeatherApp.Commands
                 SqlCommand command = new SqlCommand(deleteQuery, connection);
                 command.Parameters.AddWithValue("@Id", id);
                 connection.Open();
-                var result = command.ExecuteScalar();
-                return result != null;
+                int rowsAffected = command.ExecuteNonQuery();
+                return rowsAffected > 0;
             }
+        
         }
 
         public string GetFavourite(int id)
