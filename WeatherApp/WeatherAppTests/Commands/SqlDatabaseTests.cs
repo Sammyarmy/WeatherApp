@@ -1,18 +1,21 @@
-﻿using System.Data.SqlClient;
-using NUnit.Framework;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
+using System.Data.SqlClient;
 using WeatherApp.Commands;
 
-namespace WeatherApp.Tests.Commands
+namespace WeatherAppTests.Commands
 {
     public class SqlDatabaseTests
     {
         private IDatabase _database;
         private string _connectionString = "Server=localhost;Database=WeatherApp;User Id=BeagleStreet;Password=Password;";
+        private Mock<ILogger<SqlDatabase>> _loggerMock;
 
         [SetUp]
         public void Setup()
         {
-            _database = new SqlDatabase();
+            _loggerMock = new Mock<ILogger<SqlDatabase>>();
+            _database = new SqlDatabase(_loggerMock.Object);
         }
 
         [Test]
